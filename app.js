@@ -369,7 +369,7 @@ async function handleFileUpload(event) {
         fileName.textContent = '';
         return;
     }
-    
+
     console.log('File selected:', file.name, file.type, file.size);
     fileName.textContent = `Loading ${file.name}...`;
     fileName.style.color = '#667eea';
@@ -419,7 +419,7 @@ async function handleFileUpload(event) {
             updateCharCount();
             fileName.textContent = `✓ Loaded: ${file.name}`;
             fileName.style.color = '#4caf50';
-            
+
             // Automatically switch to reader mode and prepare to start
             setTimeout(() => {
                 startReading();
@@ -457,11 +457,18 @@ function readTextFile(file) {
 // Read PDF file
 async function readPDFFile(file) {
     try {
+        // Wait for PDF.js to be available
         if (typeof pdfjsLib === 'undefined') {
-            throw new Error('PDF.js library not loaded');
+            // Wait a bit and check again
+            await new Promise(resolve => setTimeout(resolve, 500));
+            if (typeof pdfjsLib === 'undefined') {
+                throw new Error('PDF.js library not loaded. Please refresh the page.');
+            }
         }
+
         const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
         let fullText = '';
 
         for (let i = 1; i <= pdf.numPages; i++) {
@@ -473,6 +480,7 @@ async function readPDFFile(file) {
 
         return fullText.trim();
     } catch (error) {
+        console.error('PDF parsing error:', error);
         throw new Error('Failed to parse PDF: ' + error.message);
     }
 }
