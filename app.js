@@ -31,8 +31,6 @@ const charCount = document.getElementById('charCount');
 const pauseOverlay = document.getElementById('pauseOverlay');
 const fileInput = document.getElementById('fileInput');
 const fileName = document.getElementById('fileName');
-const fileInput = document.getElementById('fileInput');
-const fileName = document.getElementById('fileName');
 
 // Get the alphanumeric core of a word (handles punctuation and contractions)
 function getCoreSlices(raw) {
