@@ -21,3 +21,8 @@ npm-debug.log*
 # Environment variables
 .env
 .env.local
+
+# Icon generation helpers (keep icons, exclude helpers)
+generate-icons.html
+create-icons.html
+generate_icons.py
