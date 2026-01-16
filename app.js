@@ -357,16 +357,68 @@ if (typeof pdfjsLib !== 'undefined') {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
-// File upload handler
-fileInput.addEventListener('change', handleFileUpload);
+// File upload handler - ensure DOM is ready
+function initializeFileUpload() {
+    const fileInputEl = document.getElementById('fileInput');
+    const fileNameEl = document.getElementById('fileName');
+    
+    if (!fileInputEl) {
+        console.error('fileInput element not found!');
+        return;
+    }
+    
+    if (!fileNameEl) {
+        console.error('fileName element not found!');
+        return;
+    }
+    
+    fileInputEl.addEventListener('change', handleFileUpload);
+    console.log('File upload handler attached successfully');
+    
+    // Also add click handler to label for debugging and to ensure it works
+    const labelEl = document.querySelector('label[for="fileInput"]');
+    if (labelEl) {
+        labelEl.addEventListener('click', function(e) {
+            console.log('Upload button clicked');
+            // Ensure the file input is triggered
+            if (fileInputEl && !fileInputEl.disabled) {
+                // The label's 'for' attribute should handle this, but let's be explicit
+                setTimeout(() => {
+                    if (fileInputEl.files && fileInputEl.files.length > 0) {
+                        console.log('File selected via label click');
+                    }
+                }, 100);
+            }
+        });
+    } else {
+        console.warn('Label for fileInput not found');
+    }
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeFileUpload);
+} else {
+    // DOM is already ready
+    initializeFileUpload();
+}
+
+// Debug: Log when page loads
+console.log('SpeedReaderPro app.js loaded');
+console.log('File input element exists:', !!document.getElementById('fileInput'));
+console.log('File name element exists:', !!document.getElementById('fileName'));
 
 // Handle file upload
 async function handleFileUpload(event) {
+    console.log('handleFileUpload called', event);
     // Get file immediately and store reference
     const inputElement = event.target;
+    console.log('Input element:', inputElement, 'Files:', inputElement.files);
     const file = inputElement.files && inputElement.files[0];
     if (!file) {
-        if (fileName) fileName.textContent = '';
+        console.log('No file selected');
+        const fileNameEl = document.getElementById('fileName');
+        if (fileNameEl) fileNameEl.textContent = '';
         return;
     }
 
@@ -377,9 +429,10 @@ async function handleFileUpload(event) {
     const fileExtension = fileNameStr.split('.').pop().toLowerCase();
 
     console.log('File selected:', fileNameStr, fileType, fileSize, 'Extension:', fileExtension);
-    if (fileName) {
-        fileName.textContent = `Loading ${fileNameStr}...`;
-        fileName.style.color = '#667eea';
+    const fileNameEl = document.getElementById('fileName');
+    if (fileNameEl) {
+        fileNameEl.textContent = `Loading ${fileNameStr}...`;
+        fileNameEl.style.color = '#667eea';
     }
 
     // Don't reset file input until after we're done reading
@@ -405,7 +458,8 @@ async function handleFileUpload(event) {
             console.log('RTF file read, length:', text ? text.length : 0);
         } else {
             alert('Unsupported file type. Please upload .txt, .md, .pdf, .doc, .docx, or .rtf files.');
-            if (fileName) fileName.textContent = '';
+            const fileNameEl = document.getElementById('fileName');
+            if (fileNameEl) fileNameEl.textContent = '';
             inputElement.value = ''; // Reset file input
             return;
         }
@@ -418,9 +472,10 @@ async function handleFileUpload(event) {
             }
             textInput.value = text;
             updateCharCount();
-            if (fileName) {
-                fileName.textContent = `✓ Loaded: ${fileNameStr}`;
-                fileName.style.color = '#4caf50';
+            const fileNameEl = document.getElementById('fileName');
+            if (fileNameEl) {
+                fileNameEl.textContent = `✓ Loaded: ${fileNameStr}`;
+                fileNameEl.style.color = '#4caf50';
             }
 
             // Automatically switch to reader mode and prepare to start
@@ -435,9 +490,10 @@ async function handleFileUpload(event) {
     } catch (error) {
         console.error('Error reading file:', error);
         alert(`Error reading file: ${error.message}`);
-        if (fileName) {
-            fileName.textContent = 'Error loading file';
-            fileName.style.color = '#f44336';
+        const fileNameEl = document.getElementById('fileName');
+        if (fileNameEl) {
+            fileNameEl.textContent = 'Error loading file';
+            fileNameEl.style.color = '#f44336';
         }
         // Don't reset file input here - let it stay until after successful read
     }
