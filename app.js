@@ -29,6 +29,10 @@ const backBtn = document.getElementById('backBtn');
 const progressFill = document.getElementById('progressFill');
 const charCount = document.getElementById('charCount');
 const pauseOverlay = document.getElementById('pauseOverlay');
+const fileInput = document.getElementById('fileInput');
+const fileName = document.getElementById('fileName');
+const fileInput = document.getElementById('fileInput');
+const fileName = document.getElementById('fileName');
 
 // Get the alphanumeric core of a word (handles punctuation and contractions)
 function getCoreSlices(raw) {
@@ -349,6 +353,146 @@ fontSizeControl.addEventListener('input', (e) => {
 
 // Character count update
 textInput.addEventListener('input', updateCharCount);
+
+// Initialize PDF.js worker
+if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// File upload handler
+fileInput.addEventListener('change', handleFileUpload);
+
+// Handle file upload
+async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    fileName.textContent = `Loading ${file.name}...`;
+    fileName.style.color = '#667eea';
+    
+    try {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        let text = '';
+        
+        switch (fileExtension) {
+            case 'txt':
+            case 'md':
+            case 'markdown':
+                text = await readTextFile(file);
+                break;
+            case 'pdf':
+                text = await readPDFFile(file);
+                break;
+            case 'doc':
+            case 'docx':
+                text = await readDocxFile(file);
+                break;
+            case 'rtf':
+                text = await readRTFFile(file);
+                break;
+            default:
+                alert('Unsupported file type. Please upload .txt, .md, .pdf, .doc, .docx, or .rtf files.');
+                fileName.textContent = '';
+                return;
+        }
+        
+        if (text && text.trim().length > 0) {
+            // Limit to maxlength
+            if (text.length > 1000000) {
+                text = text.substring(0, 1000000);
+                alert('File is too large. Only the first 1,000,000 characters have been loaded.');
+            }
+            textInput.value = text;
+            updateCharCount();
+            fileName.textContent = `✓ Loaded: ${file.name}`;
+            fileName.style.color = '#4caf50';
+        } else {
+            throw new Error('No text could be extracted from the file.');
+        }
+    } catch (error) {
+        console.error('Error reading file:', error);
+        alert(`Error reading file: ${error.message}`);
+        fileName.textContent = 'Error loading file';
+        fileName.style.color = '#f44336';
+    }
+}
+
+// Read text file (txt, md)
+function readTextFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = (e) => reject(new Error('Failed to read text file'));
+        reader.readAsText(file);
+    });
+}
+
+// Read PDF file
+async function readPDFFile(file) {
+    try {
+        if (typeof pdfjsLib === 'undefined') {
+            throw new Error('PDF.js library not loaded');
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n\n';
+        }
+        
+        return fullText.trim();
+    } catch (error) {
+        throw new Error('Failed to parse PDF: ' + error.message);
+    }
+}
+
+// Read DOCX file (basic implementation)
+async function readDocxFile(file) {
+    try {
+        // For DOCX, we'll use a simple approach - try to load mammoth.js dynamically
+        // If it fails, suggest conversion
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js';
+        document.head.appendChild(script);
+        
+        return new Promise((resolve, reject) => {
+            script.onload = async () => {
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const result = await mammoth.extractRawText({ arrayBuffer });
+                    resolve(result.value);
+                } catch (error) {
+                    reject(new Error('Failed to parse DOCX. Please convert to PDF or TXT.'));
+                }
+            };
+            script.onerror = () => {
+                reject(new Error('DOCX parsing requires additional library. Please convert to PDF or TXT.'));
+            };
+        });
+    } catch (error) {
+        throw new Error('Failed to read DOCX file: ' + error.message);
+    }
+}
+
+// Read RTF file (basic text extraction)
+async function readRTFFile(file) {
+    try {
+        const text = await readTextFile(file);
+        // Basic RTF text extraction - remove RTF control codes
+        // This is a simple implementation - may not work for all RTF files
+        return text
+            .replace(/\\[a-z]+\d*\s?/gi, '') // Remove RTF control words
+            .replace(/[{}]/g, '') // Remove braces
+            .replace(/\n\s*\n/g, '\n\n') // Clean up extra newlines
+            .trim();
+    } catch (error) {
+        throw new Error('Failed to read RTF file: ' + error.message);
+    }
+}
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {

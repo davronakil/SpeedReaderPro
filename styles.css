@@ -67,8 +67,39 @@ h1 {
 .subtitle {
     text-align: center;
     color: #666;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     font-size: 1rem;
+}
+
+.file-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-file {
+    background: #f0f0f0;
+    color: #333;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    display: inline-block;
+    border: 2px dashed #ccc;
+}
+
+.btn-file:hover {
+    background: #e0e0e0;
+    border-color: var(--primary-color);
+}
+
+.file-name {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
 }
 
 #textInput {
