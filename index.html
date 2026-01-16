@@ -161,6 +161,11 @@ Try it out, see if you like it, and let me know what you think. Or don't. I'm no
 
     <!-- Service Worker Registration -->
     <script>
+        // Ensure we're in the right directory - redirect if needed
+        if (window.location.pathname !== '/reader/' && window.location.pathname !== '/reader/index.html') {
+            window.location.replace('/reader/');
+        }
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Unregister old service workers first
