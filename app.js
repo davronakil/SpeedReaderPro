@@ -439,7 +439,7 @@ async function handleFileUpload(event) {
             fileName.textContent = 'Error loading file';
             fileName.style.color = '#f44336';
         }
-        if (fileInput) fileInput.value = ''; // Reset file input
+        // Don't reset file input here - let it stay until after successful read
     }
 }
 
