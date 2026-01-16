@@ -71,62 +71,6 @@ h1 {
     font-size: 1rem;
 }
 
-.file-upload-container {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    color: #000000;
-}
-
-.file-upload-text,
-.file-upload-text *,
-.btn-file .file-upload-text,
-label.btn-file .file-upload-text {
-    color: #000000 !important;
-}
-
-.btn-file {
-    background: #f0f0f0 !important;
-    color: #000000 !important;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-weight: 600;
-    display: inline-block;
-    border: 2px dashed #ccc;
-}
-
-.btn-file *,
-.btn-file span,
-.btn-file label,
-label.btn-file,
-label.btn-file span,
-label.btn-file * {
-    color: #000000 !important;
-}
-
-.btn-file:hover {
-    background: #e0e0e0 !important;
-    border-color: var(--primary-color);
-}
-
-.btn-file:hover *,
-.btn-file:hover span,
-.btn-file:hover label,
-label.btn-file:hover,
-label.btn-file:hover span,
-label.btn-file:hover * {
-    color: #000000 !important;
-}
-
-.file-name {
-    color: #666;
-    font-size: 0.9rem;
-    font-style: italic;
-}
 
 #textInput {
     width: 100%;
@@ -164,17 +108,6 @@ label.btn-file:hover * {
     font-family: inherit;
 }
 
-/* Force black text for file upload button - override any .btn styles */
-.btn.btn-file,
-.btn.btn-file *,
-.btn.btn-file span,
-.btn.btn-file .file-upload-text,
-label.btn.btn-file,
-label.btn.btn-file *,
-label.btn.btn-file span,
-label.btn.btn-file .file-upload-text {
-    color: #000000 !important;
-}
 
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
