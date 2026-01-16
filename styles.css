@@ -164,6 +164,18 @@ label.btn-file:hover * {
     font-family: inherit;
 }
 
+/* Force black text for file upload button - override any .btn styles */
+.btn.btn-file,
+.btn.btn-file *,
+.btn.btn-file span,
+.btn.btn-file .file-upload-text,
+label.btn.btn-file,
+label.btn.btn-file *,
+label.btn.btn-file span,
+label.btn.btn-file .file-upload-text {
+    color: #000000 !important;
+}
+
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
