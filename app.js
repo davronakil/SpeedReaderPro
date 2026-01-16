@@ -365,8 +365,12 @@ fileInput.addEventListener('change', handleFileUpload);
 // Handle file upload
 async function handleFileUpload(event) {
     const file = event.target.files[0];
-    if (!file) return;
-
+    if (!file) {
+        fileName.textContent = '';
+        return;
+    }
+    
+    console.log('File selected:', file.name, file.type, file.size);
     fileName.textContent = `Loading ${file.name}...`;
     fileName.style.color = '#667eea';
 
@@ -378,21 +382,30 @@ async function handleFileUpload(event) {
             case 'txt':
             case 'md':
             case 'markdown':
+                console.log('Reading text file...');
                 text = await readTextFile(file);
+                console.log('Text file read, length:', text.length);
                 break;
             case 'pdf':
+                console.log('Reading PDF file...');
                 text = await readPDFFile(file);
+                console.log('PDF file read, length:', text.length);
                 break;
             case 'doc':
             case 'docx':
+                console.log('Reading DOCX file...');
                 text = await readDocxFile(file);
+                console.log('DOCX file read, length:', text.length);
                 break;
             case 'rtf':
+                console.log('Reading RTF file...');
                 text = await readRTFFile(file);
+                console.log('RTF file read, length:', text.length);
                 break;
             default:
                 alert('Unsupported file type. Please upload .txt, .md, .pdf, .doc, .docx, or .rtf files.');
                 fileName.textContent = '';
+                fileInput.value = ''; // Reset file input
                 return;
         }
 
