@@ -62,8 +62,13 @@
     <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-72x72.png">
     <link rel="shortcut icon" href="icons/icon-96x96.png">
 
+    <!-- Disable caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=3">
 
     <!-- PDF.js for PDF parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -158,36 +163,43 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=3"></script>
 
-    <!-- Service Worker Registration -->
+    <!-- Service Worker Registration - DISABLED FOR DEBUGGING -->
     <script>
         // Ensure we're in the right directory - redirect if needed
         if (window.location.pathname !== '/reader/' && window.location.pathname !== '/reader/index.html') {
             window.location.replace('/reader/');
         }
 
+        // DISABLE SERVICE WORKER FOR DEBUGGING - Unregister all existing ones
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Unregister old service workers first
+                // Unregister ALL service workers
                 navigator.serviceWorker.getRegistrations().then(function(registrations) {
                     for(let registration of registrations) {
-                        registration.unregister();
+                        registration.unregister().then(function(success) {
+                            if (success) {
+                                console.log('Service Worker unregistered:', registration.scope);
+                            }
+                        });
                     }
                 });
-
-                // Register new service worker - use relative path
-                const swPath = './sw.js';
-                navigator.serviceWorker.register(swPath, { scope: './' })
-                    .then((registration) => {
-                        console.log('Service Worker registered:', registration);
-                        // Force update
-                        registration.update();
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker registration failed:', error);
-                        // Don't block the app if service worker fails
+                
+                // Clear all caches
+                if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                        for (let name of names) {
+                            caches.delete(name).then(function(success) {
+                                if (success) {
+                                    console.log('Cache deleted:', name);
+                                }
+                            });
+                        }
                     });
+                }
+                
+                console.log('Service Worker and caches disabled for debugging');
             });
         }
     </script>
