@@ -454,16 +454,23 @@ function readTextFile(file) {
     return new Promise((resolve, reject) => {
         try {
             // Check if file is still valid
-            if (!file || !file.name) {
+            if (!file) {
                 reject(new Error('Invalid file object'));
                 return;
             }
-
+            
+            // Create a new FileReader for each read operation
             const reader = new FileReader();
-
-            reader.onload = (e) => {
+            
+            // Set up event handlers before reading
+            reader.onload = function(e) {
                 try {
-                    const text = e.target.result;
+                    const result = e.target.result;
+                    if (result === null || result === undefined) {
+                        reject(new Error('File read returned null or undefined'));
+                        return;
+                    }
+                    const text = String(result);
                     if (!text || text.trim().length === 0) {
                         reject(new Error('File appears to be empty'));
                     } else {
@@ -473,17 +480,22 @@ function readTextFile(file) {
                     reject(new Error('Error processing file content: ' + error.message));
                 }
             };
-
-            reader.onerror = (e) => {
-                reject(new Error('Failed to read text file'));
+            
+            reader.onerror = function(e) {
+                console.error('FileReader error:', e);
+                reject(new Error('Failed to read text file: ' + (e.target.error ? e.target.error.message : 'Unknown error')));
             };
-
-            reader.onabort = () => {
+            
+            reader.onabort = function() {
                 reject(new Error('File reading was aborted'));
             };
-
-            // Read the file
-            reader.readAsText(file, 'UTF-8');
+            
+            // Read the file immediately
+            try {
+                reader.readAsText(file, 'UTF-8');
+            } catch (error) {
+                reject(new Error('Error reading file: ' + error.message));
+            }
         } catch (error) {
             reject(new Error('Error setting up file reader: ' + error.message));
         }
