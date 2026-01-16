@@ -406,6 +406,13 @@ async function handleFileUpload(event) {
             updateCharCount();
             fileName.textContent = `✓ Loaded: ${file.name}`;
             fileName.style.color = '#4caf50';
+            
+            // Automatically switch to reader mode and prepare to start
+            setTimeout(() => {
+                startReading();
+                // Start paused so user can press play/resume
+                pause();
+            }, 500);
         } else {
             throw new Error('No text could be extracted from the file.');
         }
@@ -421,9 +428,16 @@ async function handleFileUpload(event) {
 function readTextFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.onerror = (e) => reject(new Error('Failed to read text file'));
-        reader.readAsText(file);
+        reader.onload = (e) => {
+            const text = e.target.result;
+            if (!text || text.trim().length === 0) {
+                reject(new Error('File appears to be empty'));
+            } else {
+                resolve(text);
+            }
+        };
+        reader.onerror = (e) => reject(new Error('Failed to read text file: ' + e.message));
+        reader.readAsText(file, 'UTF-8');
     });
 }
 
