@@ -440,23 +440,52 @@ async function handleFileUpload(event) {
 // Read text file (txt, md)
 function readTextFile(file) {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const text = e.target.result;
-            if (!text || text.trim().length === 0) {
-                reject(new Error('File appears to be empty'));
-            } else {
-                resolve(text);
+        try {
+            // Check if file is still valid
+            if (!file || !file.name) {
+                reject(new Error('Invalid file object'));
+                return;
             }
-        };
-        reader.onerror = (e) => reject(new Error('Failed to read text file: ' + e.message));
-        reader.readAsText(file, 'UTF-8');
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                try {
+                    const text = e.target.result;
+                    if (!text || text.trim().length === 0) {
+                        reject(new Error('File appears to be empty'));
+                    } else {
+                        resolve(text);
+                    }
+                } catch (error) {
+                    reject(new Error('Error processing file content: ' + error.message));
+                }
+            };
+
+            reader.onerror = (e) => {
+                reject(new Error('Failed to read text file'));
+            };
+
+            reader.onabort = () => {
+                reject(new Error('File reading was aborted'));
+            };
+
+            // Read the file
+            reader.readAsText(file, 'UTF-8');
+        } catch (error) {
+            reject(new Error('Error setting up file reader: ' + error.message));
+        }
     });
 }
 
 // Read PDF file
 async function readPDFFile(file) {
     try {
+        // Check if file is still valid
+        if (!file || !file.name) {
+            throw new Error('Invalid file object');
+        }
+
         // Wait for PDF.js to be available
         if (typeof pdfjsLib === 'undefined') {
             // Wait a bit and check again
@@ -466,7 +495,19 @@ async function readPDFFile(file) {
             }
         }
 
-        const arrayBuffer = await file.arrayBuffer();
+        // Read file as ArrayBuffer immediately
+        let arrayBuffer;
+        try {
+            arrayBuffer = await file.arrayBuffer();
+        } catch (error) {
+            throw new Error('Failed to read file: ' + error.message);
+        }
+
+        // Check if arrayBuffer is valid
+        if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+            throw new Error('File appears to be empty');
+        }
+
         const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
         const pdf = await loadingTask.promise;
         let fullText = '';
@@ -516,6 +557,11 @@ async function readDocxFile(file) {
 // Read RTF file (basic text extraction)
 async function readRTFFile(file) {
     try {
+        // Check if file is still valid
+        if (!file || !file.name) {
+            throw new Error('Invalid file object');
+        }
+
         const text = await readTextFile(file);
         // Basic RTF text extraction - remove RTF control codes
         // This is a simple implementation - may not work for all RTF files
