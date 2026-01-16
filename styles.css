@@ -77,6 +77,11 @@ h1 {
     gap: 1rem;
     margin-bottom: 1rem;
     flex-wrap: wrap;
+    color: #000000;
+}
+
+.file-upload-text {
+    color: #000000;
 }
 
 .btn-file {
@@ -91,8 +96,12 @@ h1 {
     border: 2px dashed #ccc;
 }
 
-.btn-file,
-.btn-file span {
+.btn-file *,
+.btn-file span,
+.btn-file label,
+label.btn-file,
+label.btn-file span,
+label.btn-file * {
     color: #000000 !important;
 }
 
@@ -101,8 +110,12 @@ h1 {
     border-color: var(--primary-color);
 }
 
-.btn-file:hover,
-.btn-file:hover span {
+.btn-file:hover *,
+.btn-file:hover span,
+.btn-file:hover label,
+label.btn-file:hover,
+label.btn-file:hover span,
+label.btn-file:hover * {
     color: #000000 !important;
 }
 
@@ -190,7 +203,7 @@ h1 {
     font-size: 0.9rem;
 }
 
-/* Reader Screen Styles */
+/* Reader Screen Stylesgit */
 #readerScreen {
     background: var(--background-dark);
     justify-content: center;
