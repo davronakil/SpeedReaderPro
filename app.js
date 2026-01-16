@@ -452,10 +452,10 @@ function readTextFile(file) {
                 reject(new Error('Invalid file object'));
                 return;
             }
-            
+
             // Create a new FileReader for each read operation
             const reader = new FileReader();
-            
+
             // Set up event handlers before reading
             reader.onload = function(e) {
                 try {
@@ -474,16 +474,16 @@ function readTextFile(file) {
                     reject(new Error('Error processing file content: ' + error.message));
                 }
             };
-            
+
             reader.onerror = function(e) {
                 console.error('FileReader error:', e);
                 reject(new Error('Failed to read text file: ' + (e.target.error ? e.target.error.message : 'Unknown error')));
             };
-            
+
             reader.onabort = function() {
                 reject(new Error('File reading was aborted'));
             };
-            
+
             // Read the file immediately
             try {
                 reader.readAsText(file, 'UTF-8');
