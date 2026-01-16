@@ -29,7 +29,6 @@ const backBtn = document.getElementById('backBtn');
 const progressFill = document.getElementById('progressFill');
 const charCount = document.getElementById('charCount');
 const pauseOverlay = document.getElementById('pauseOverlay');
-// fileInput and fileName are accessed dynamically to ensure DOM is ready
 
 // Get the alphanumeric core of a word (handles punctuation and contractions)
 function getCoreSlices(raw) {
