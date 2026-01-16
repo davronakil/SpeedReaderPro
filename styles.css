@@ -81,7 +81,7 @@ h1 {
 
 .btn-file {
     background: #f0f0f0 !important;
-    color: #333 !important;
+    color: #000000 !important;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     cursor: pointer;
@@ -93,7 +93,7 @@ h1 {
 
 .btn-file,
 .btn-file span {
-    color: #333 !important;
+    color: #000000 !important;
 }
 
 .btn-file:hover {
@@ -103,7 +103,7 @@ h1 {
 
 .btn-file:hover,
 .btn-file:hover span {
-    color: #333 !important;
+    color: #000000 !important;
 }
 
 .file-name {
