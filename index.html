@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeedReader Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Initial Input Screen -->
+    <div id="inputScreen" class="screen active">
+        <div class="container">
+            <h1>SpeedReader Pro</h1>
+            <p class="subtitle">Paste your text below and start speed reading</p>
+            <textarea
+                id="textInput"
+                placeholder="Paste your text here... (Maximum 1,000,000 characters)"
+                maxlength="1000000"
+            >I just vibe coded this web application to help you read long text faster. Should I deploy it?
+
+So I saw a video about this speed reading technique where you focus on one word at a time with a highlighted focal point, and I thought "hey, that's pretty cool." So I opened Cursor, vibe coded it in like 5 minutes, and here we are.
+
+Welcome to SpeedReader Pro! It's pretty simple: paste your text, hit start, and it shows you one word at a time. That red letter? That's the optimal focal point based on some reading research I found. Your eyes naturally focus there, which apparently helps you read faster without losing your place.
+
+I'm not gonna lie, I haven't tested it extensively. I just thought it was a neat idea and wanted to build it. Maybe it'll help you read faster. Maybe you'll hate it. Who knows? But it's here if you want to try it.
+
+You can adjust the speed with the slider. Start slow, find your groove, then crank it up if you want. Change the font size if your eyes are tired. Save your progress if you need to take a break. Click the word or press space to pause. Pretty straightforward stuff.
+
+Is it revolutionary? Probably not. Is it fun to use? I think so. Will it change your life? Unlikely. But hey, it's a free speed reader that I made in 5 minutes, so at least give it a shot.
+
+Try it out, see if you like it, and let me know what you think. Or don't. I'm not your boss. Just enjoy reading without all the distractions, one red letter at a time.</textarea>
+            <div class="input-actions">
+                <button id="startBtn" class="btn btn-primary">Start Reading</button>
+                <button id="loadBtn" class="btn btn-secondary">Load Saved Progress</button>
+            </div>
+            <div class="char-count">
+                <span id="charCount">0</span> / 1,000,000 characters
+            </div>
+        </div>
+    </div>
+
+    <!-- Speed Reader Screen -->
+    <div id="readerScreen" class="screen">
+        <div class="reader-container">
+            <div id="wordDisplay" class="word-display" title="Click or tap to pause/resume">
+                <span id="wordText"></span>
+                <div id="pauseOverlay" class="pause-overlay">
+                    <div class="pause-icon">⏸</div>
+                    <div class="pause-text">Paused</div>
+                </div>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="control-group">
+                    <label for="speedControl">
+                        <span class="control-label">Speed</span>
+                        <span id="speedValue" class="control-value">300</span> WPM
+                    </label>
+                    <input
+                        type="range"
+                        id="speedControl"
+                        class="slider"
+                        min="50"
+                        max="1000"
+                        value="300"
+                        step="10"
+                    >
+                </div>
+
+                <div class="control-group">
+                    <label for="fontSizeControl">
+                        <span class="control-label">Font Size</span>
+                        <span id="fontSizeValue" class="control-value">48</span>px
+                    </label>
+                    <input
+                        type="range"
+                        id="fontSizeControl"
+                        class="slider"
+                        min="24"
+                        max="120"
+                        value="48"
+                        step="4"
+                    >
+                </div>
+
+                <div class="control-buttons">
+                    <button id="pauseBtn" class="btn btn-control">Pause</button>
+                    <button id="saveBtn" class="btn btn-control">Save Progress</button>
+                    <button id="backBtn" class="btn btn-control">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
