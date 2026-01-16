@@ -80,8 +80,8 @@ h1 {
 }
 
 .btn-file {
-    background: #f0f0f0;
-    color: #333;
+    background: #f0f0f0 !important;
+    color: #333 !important;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     cursor: pointer;
@@ -91,17 +91,19 @@ h1 {
     border: 2px dashed #ccc;
 }
 
+.btn-file,
 .btn-file span {
-    color: #333;
+    color: #333 !important;
 }
 
 .btn-file:hover {
-    background: #e0e0e0;
+    background: #e0e0e0 !important;
     border-color: var(--primary-color);
 }
 
+.btn-file:hover,
 .btn-file:hover span {
-    color: #333;
+    color: #333 !important;
 }
 
 .file-name {
