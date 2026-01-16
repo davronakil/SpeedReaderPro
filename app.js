@@ -364,18 +364,27 @@ fileInput.addEventListener('change', handleFileUpload);
 
 // Handle file upload
 async function handleFileUpload(event) {
-    const file = event.target.files[0];
+    // Get file immediately before any async operations
+    const file = event.target.files && event.target.files[0];
     if (!file) {
-        fileName.textContent = '';
+        if (fileName) fileName.textContent = '';
         return;
     }
 
-    console.log('File selected:', file.name, file.type, file.size);
-    fileName.textContent = `Loading ${file.name}...`;
-    fileName.style.color = '#667eea';
+    // Store file info immediately to prevent object invalidation
+    const fileNameStr = file.name;
+    const fileSize = file.size;
+    const fileType = file.type;
+
+    console.log('File selected:', fileNameStr, fileType, fileSize);
+    if (fileName) {
+        fileName.textContent = `Loading ${fileNameStr}...`;
+        fileName.style.color = '#667eea';
+    }
 
     try {
-        const fileExtension = file.name.split('.').pop().toLowerCase();
+        const fileExtension = fileNameStr.split('.').pop().toLowerCase();
+        console.log('File extension:', fileExtension);
         let text = '';
 
         switch (fileExtension) {
@@ -384,28 +393,28 @@ async function handleFileUpload(event) {
             case 'markdown':
                 console.log('Reading text file...');
                 text = await readTextFile(file);
-                console.log('Text file read, length:', text.length);
+                console.log('Text file read, length:', text ? text.length : 0);
                 break;
             case 'pdf':
                 console.log('Reading PDF file...');
                 text = await readPDFFile(file);
-                console.log('PDF file read, length:', text.length);
+                console.log('PDF file read, length:', text ? text.length : 0);
                 break;
             case 'doc':
             case 'docx':
                 console.log('Reading DOCX file...');
                 text = await readDocxFile(file);
-                console.log('DOCX file read, length:', text.length);
+                console.log('DOCX file read, length:', text ? text.length : 0);
                 break;
             case 'rtf':
                 console.log('Reading RTF file...');
                 text = await readRTFFile(file);
-                console.log('RTF file read, length:', text.length);
+                console.log('RTF file read, length:', text ? text.length : 0);
                 break;
             default:
                 alert('Unsupported file type. Please upload .txt, .md, .pdf, .doc, .docx, or .rtf files.');
-                fileName.textContent = '';
-                fileInput.value = ''; // Reset file input
+                if (fileName) fileName.textContent = '';
+                if (fileInput) fileInput.value = ''; // Reset file input
                 return;
         }
 
@@ -417,8 +426,10 @@ async function handleFileUpload(event) {
             }
             textInput.value = text;
             updateCharCount();
-            fileName.textContent = `✓ Loaded: ${file.name}`;
-            fileName.style.color = '#4caf50';
+            if (fileName) {
+                fileName.textContent = `✓ Loaded: ${fileNameStr}`;
+                fileName.style.color = '#4caf50';
+            }
 
             // Automatically switch to reader mode and prepare to start
             setTimeout(() => {
@@ -432,8 +443,11 @@ async function handleFileUpload(event) {
     } catch (error) {
         console.error('Error reading file:', error);
         alert(`Error reading file: ${error.message}`);
-        fileName.textContent = 'Error loading file';
-        fileName.style.color = '#f44336';
+        if (fileName) {
+            fileName.textContent = 'Error loading file';
+            fileName.style.color = '#f44336';
+        }
+        if (fileInput) fileInput.value = ''; // Reset file input
     }
 }
 
