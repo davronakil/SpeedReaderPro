@@ -26,3 +26,9 @@ npm-debug.log*
 generate-icons.html
 create-icons.html
 generate_icons.py
+
+# Large media files
+*.mp4
+*.mov
+*.avi
+demo.mp4
