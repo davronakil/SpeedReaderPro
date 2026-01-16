@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    
+    <!-- Redirect to /reader/ if accessed from root -->
+    <script>
+        // If we're at the root and not in /reader/, redirect
+        if (window.location.pathname === '/' && !window.location.pathname.includes('/reader/')) {
+            window.location.href = '/reader/';
+        }
+    </script>
 
     <!-- Primary Meta Tags -->
     <title>SpeedReader Pro - Read Faster with Focused Speed Reading</title>
