@@ -29,8 +29,7 @@ const backBtn = document.getElementById('backBtn');
 const progressFill = document.getElementById('progressFill');
 const charCount = document.getElementById('charCount');
 const pauseOverlay = document.getElementById('pauseOverlay');
-const fileInput = document.getElementById('fileInput');
-const fileName = document.getElementById('fileName');
+// fileInput and fileName are accessed dynamically to ensure DOM is ready
 
 // Get the alphanumeric core of a word (handles punctuation and contractions)
 function getCoreSlices(raw) {
@@ -359,54 +358,104 @@ if (typeof pdfjsLib !== 'undefined') {
 
 // File upload handler - ensure DOM is ready
 function initializeFileUpload() {
+    console.log('initializeFileUpload called, readyState:', document.readyState);
     const fileInputEl = document.getElementById('fileInput');
     const fileNameEl = document.getElementById('fileName');
-    
+
     if (!fileInputEl) {
-        console.error('fileInput element not found!');
+        console.error('fileInput element not found! Available elements:', document.querySelectorAll('input, label').length);
         return;
     }
-    
+
     if (!fileNameEl) {
         console.error('fileName element not found!');
         return;
     }
+
+    console.log('Found fileInput:', fileInputEl.id, fileInputEl.type, fileInputEl.accept);
+    console.log('Found fileName:', fileNameEl.id);
     
-    fileInputEl.addEventListener('change', handleFileUpload);
-    console.log('File upload handler attached successfully');
+    // Remove any existing listeners to avoid duplicates
+    const newFileInput = fileInputEl.cloneNode(true);
+    fileInputEl.parentNode.replaceChild(newFileInput, fileInputEl);
     
+    newFileInput.addEventListener('change', handleFileUpload);
+    console.log('File upload handler attached successfully to:', newFileInput.id);
+
     // Also add click handler to label for debugging and to ensure it works
     const labelEl = document.querySelector('label[for="fileInput"]');
     if (labelEl) {
-        labelEl.addEventListener('click', function(e) {
+        // Remove any existing listeners
+        const newLabel = labelEl.cloneNode(true);
+        labelEl.parentNode.replaceChild(newLabel, labelEl);
+        
+        newLabel.addEventListener('click', function(e) {
             console.log('Upload button clicked');
             // Ensure the file input is triggered
-            if (fileInputEl && !fileInputEl.disabled) {
+            if (newFileInput && !newFileInput.disabled) {
                 // The label's 'for' attribute should handle this, but let's be explicit
                 setTimeout(() => {
-                    if (fileInputEl.files && fileInputEl.files.length > 0) {
+                    if (newFileInput.files && newFileInput.files.length > 0) {
                         console.log('File selected via label click');
                     }
                 }, 100);
             }
         });
+        console.log('Label click handler attached');
     } else {
         console.warn('Label for fileInput not found');
     }
 }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeFileUpload);
-} else {
-    // DOM is already ready
-    initializeFileUpload();
+// Initialize when DOM is ready with error handling
+function safeInitializeFileUpload() {
+    try {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                try {
+                    initializeFileUpload();
+                } catch (e) {
+                    console.error('Error initializing file upload on DOMContentLoaded:', e);
+                }
+            });
+        } else {
+            // DOM is already ready
+            initializeFileUpload();
+        }
+    } catch (e) {
+        console.error('Error setting up file upload initialization:', e);
+        // Try again after a delay
+        setTimeout(function() {
+            try {
+                initializeFileUpload();
+            } catch (e2) {
+                console.error('Error retrying file upload initialization:', e2);
+            }
+        }, 1000);
+    }
 }
 
-// Debug: Log when page loads
-console.log('SpeedReaderPro app.js loaded');
-console.log('File input element exists:', !!document.getElementById('fileInput'));
-console.log('File name element exists:', !!document.getElementById('fileName'));
+safeInitializeFileUpload();
+
+// Debug: Log when page loads - run immediately
+(function() {
+    console.log('SpeedReaderPro app.js loaded');
+    console.log('Document ready state:', document.readyState);
+    console.log('File input element exists:', !!document.getElementById('fileInput'));
+    console.log('File name element exists:', !!document.getElementById('fileName'));
+    
+    // Also check after a short delay to ensure DOM is ready
+    setTimeout(function() {
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        console.log('After delay - File input:', fileInput);
+        console.log('After delay - File name:', fileName);
+        if (fileInput) {
+            console.log('File input type:', fileInput.type);
+            console.log('File input accept:', fileInput.accept);
+        }
+    }, 100);
+})();
 
 // Handle file upload
 async function handleFileUpload(event) {

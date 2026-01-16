@@ -176,8 +176,9 @@
                     }
                 });
 
-                // Register new service worker
-                navigator.serviceWorker.register('/reader/sw.js', { scope: '/reader/' })
+                // Register new service worker - use relative path
+                const swPath = './sw.js';
+                navigator.serviceWorker.register(swPath, { scope: './' })
                     .then((registration) => {
                         console.log('Service Worker registered:', registration);
                         // Force update
@@ -185,6 +186,7 @@
                     })
                     .catch((error) => {
                         console.log('Service Worker registration failed:', error);
+                        // Don't block the app if service worker fails
                     });
             });
         }
