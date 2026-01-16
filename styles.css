@@ -80,8 +80,11 @@ h1 {
     color: #000000;
 }
 
-.file-upload-text {
-    color: #000000;
+.file-upload-text,
+.file-upload-text *,
+.btn-file .file-upload-text,
+label.btn-file .file-upload-text {
+    color: #000000 !important;
 }
 
 .btn-file {
