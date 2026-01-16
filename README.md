@@ -1,4 +1,4 @@
-# SpeedReader Pro 🚀
+# SpeedReaderPro 🚀
 
 A modern, responsive web application for speed reading that helps you read faster by focusing on one word at a time with an optimal focal point.
 

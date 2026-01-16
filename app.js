@@ -366,14 +366,14 @@ fileInput.addEventListener('change', handleFileUpload);
 async function handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
-    
+
     fileName.textContent = `Loading ${file.name}...`;
     fileName.style.color = '#667eea';
-    
+
     try {
         const fileExtension = file.name.split('.').pop().toLowerCase();
         let text = '';
-        
+
         switch (fileExtension) {
             case 'txt':
             case 'md':
@@ -395,7 +395,7 @@ async function handleFileUpload(event) {
                 fileName.textContent = '';
                 return;
         }
-        
+
         if (text && text.trim().length > 0) {
             // Limit to maxlength
             if (text.length > 1000000) {
@@ -436,14 +436,14 @@ async function readPDFFile(file) {
         const arrayBuffer = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
         let fullText = '';
-        
+
         for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
             const pageText = textContent.items.map(item => item.str).join(' ');
             fullText += pageText + '\n\n';
         }
-        
+
         return fullText.trim();
     } catch (error) {
         throw new Error('Failed to parse PDF: ' + error.message);
@@ -458,7 +458,7 @@ async function readDocxFile(file) {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js';
         document.head.appendChild(script);
-        
+
         return new Promise((resolve, reject) => {
             script.onload = async () => {
                 try {
