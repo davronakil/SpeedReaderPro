@@ -155,9 +155,19 @@ Try it out, see if you like it, and let me know what you think. Or don't. I'm no
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
+                // Unregister old service workers first
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+                
+                // Register new service worker
                 navigator.serviceWorker.register('/reader/sw.js', { scope: '/reader/' })
                     .then((registration) => {
                         console.log('Service Worker registered:', registration);
+                        // Force update
+                        registration.update();
                     })
                     .catch((error) => {
                         console.log('Service Worker registration failed:', error);
