@@ -1,4 +1,4 @@
-// Service Worker for SpeedReader Pro
+// Service Worker for SpeedReaderPro
 const CACHE_NAME = 'speedreader-pro-v2';
 const urlsToCache = [
   '/reader/',

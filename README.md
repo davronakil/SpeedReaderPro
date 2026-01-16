@@ -18,7 +18,7 @@ A modern, responsive web application for speed reading that helps you read faste
 
 ## How It Works
 
-SpeedReader Pro uses the Optimal Recognition Point (ORP) technique, which positions a highlighted focal letter at the optimal position within each word. This allows your eyes to focus on a single point while your brain processes the entire word, resulting in faster reading without losing comprehension.
+SpeedReaderPro uses the Optimal Recognition Point (ORP) technique, which positions a highlighted focal letter at the optimal position within each word. This allows your eyes to focus on a single point while your brain processes the entire word, resulting in faster reading without losing comprehension.
 
 ### Optimal Recognition Point Algorithm
 
