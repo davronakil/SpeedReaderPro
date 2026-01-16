@@ -11,24 +11,24 @@
     <meta name="keywords" content="speed reading, reading app, speed reader, reading tool, focus reading, optimal recognition point, ORP, reading faster">
     <meta name="author" content="SpeedReader Pro">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://akil.me/reader">
+    <link rel="canonical" href="https://www.akil.me/reader/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://akil.me/reader">
+    <meta property="og:url" content="https://www.akil.me/reader/">
     <meta property="og:title" content="SpeedReader Pro - Read Faster with Focused Speed Reading">
     <meta property="og:description" content="A modern speed reading app that helps you read faster by focusing on one word at a time with an optimal focal point.">
-    <meta property="og:image" content="https://akil.me/reader/icons/cover-1200x630.png">
+    <meta property="og:image" content="https://www.akil.me/reader/icons/cover-1200x630.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="SpeedReader Pro">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://akil.me/reader">
+    <meta name="twitter:url" content="https://www.akil.me/reader/">
     <meta name="twitter:title" content="SpeedReader Pro - Read Faster with Focused Speed Reading">
     <meta name="twitter:description" content="A modern speed reading app that helps you read faster by focusing on one word at a time with an optimal focal point.">
-    <meta name="twitter:image" content="https://akil.me/reader/icons/cover-1200x630.png">
+    <meta name="twitter:image" content="https://www.akil.me/reader/icons/cover-1200x630.png">
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -155,7 +155,7 @@ Try it out, see if you like it, and let me know what you think. Or don't. I'm no
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('/reader/sw.js', { scope: '/reader/' })
                     .then((registration) => {
                         console.log('Service Worker registered:', registration);
                     })

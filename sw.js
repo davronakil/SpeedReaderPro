@@ -1,13 +1,13 @@
 // Service Worker for SpeedReader Pro
 const CACHE_NAME = 'speedreader-pro-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/reader/',
+  '/reader/index.html',
+  '/reader/styles.css',
+  '/reader/app.js',
+  '/reader/manifest.json',
+  '/reader/icons/icon-192x192.png',
+  '/reader/icons/icon-512x512.png'
 ];
 
 // Install event - cache resources
